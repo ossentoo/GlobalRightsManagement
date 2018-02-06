@@ -44,5 +44,11 @@
     <Compile Include="IFileService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GRMModels\GRMModels.csproj">
+      <Project>{56d9fdbe-fb6c-4fd9-8719-cf5c04422f64}</Project>
+      <Name>GRMModels</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

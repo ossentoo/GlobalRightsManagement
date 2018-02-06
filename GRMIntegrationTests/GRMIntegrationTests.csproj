@@ -55,7 +55,22 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\" />
+    <ProjectReference Include="..\GRMModels\GRMModels.csproj">
+      <Project>{56d9fdbe-fb6c-4fd9-8719-cf5c04422f64}</Project>
+      <Name>GRMModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GRMServices\GRMServices.csproj">
+      <Project>{194cd689-6375-4f0b-b27d-43305a213f63}</Project>
+      <Name>GRMServices</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\DistributionPartnerContracts.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\MusicContracts.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
