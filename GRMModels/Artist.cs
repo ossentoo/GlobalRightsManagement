@@ -38,7 +38,7 @@ namespace GRMModels
     }
 
     
-    public class DistributionPartnerContract
+    public class DistributionContract
     {
         public IEnumerable<Asset> Assets { get; set; }
         public DistributionPartner Partner { get; set; }
@@ -48,11 +48,5 @@ namespace GRMModels
     {
         public Artist Artist { get; set; }
 
-    }
-
-    public class RightManager
-    {
-        public IEnumerable<MusicContract> MusicContracts { get; set; }
-        public IEnumerable<DistributionPartnerContract> DistributionPartnerContracts { get; set; }
     }
 }

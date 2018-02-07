@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using GRMModels;
 using GRMServices.Interfaces;
 
@@ -8,6 +9,9 @@ namespace GRMServices
     public class ContractsProvider : IProvideContracts
     {
         private readonly IFileService _fileService;
+        private readonly List<MusicContract> _musicContracts;
+        private List<DistributionContract> _distributionContracts;
+
         // ReSharper disable InconsistentNaming
         private const int MusicColumns_Artist = 0;
         private const int MusicColumns_Asset = 1;
@@ -22,11 +26,12 @@ namespace GRMServices
         public ContractsProvider(IFileService fileService)
         {
             _fileService = fileService;
+            _musicContracts = new List<MusicContract>();
         }
+
         public List<MusicContract> LoadMusicContracts(string filePath)
         {
             var rowsToProcess = _fileService.GetFileDataRows(filePath);
-            var results = new List<MusicContract>();
 
             foreach (var row in rowsToProcess)
             {
@@ -63,23 +68,23 @@ namespace GRMServices
                 };
 
 
-                results.Add(contract);
+                _musicContracts.Add(contract);
             }
 
-            return results;
+            return _musicContracts;
         }
 
 
-        public List<DistributionPartnerContract> LoadDistributionPartnerContracts(string filePath)
+        public List<DistributionContract> LoadDistributionPartnerContracts(string filePath)
         {
             var rowsToProcess = _fileService.GetFileDataRows(filePath);
-            var results = new List<DistributionPartnerContract>();
+            _distributionContracts = new List<DistributionContract>();
 
             foreach (var row in rowsToProcess)
             {
                 var result = row.Split('|');
 
-                var contract = new DistributionPartnerContract
+                var contract = new DistributionContract
                 {
                     Partner = new DistributionPartner
                     {
@@ -90,11 +95,11 @@ namespace GRMServices
                     }
                 };
 
-                results.Add(contract);
+                _distributionContracts.Add(contract);
 
             }
 
-            return results;
+            return _distributionContracts;
         }
 
         private List<DistributionType> GetDistributionTypesFromRow(string distributiontypes)
@@ -116,5 +121,13 @@ namespace GRMServices
             return results;
         }
 
+        public List<string> QueryArtistAssetsToDistribute(string query)
+        {
+
+            var querySplit = query.Split(new []{' '}, 2, StringSplitOptions.RemoveEmptyEntries);
+            // _musicContracts.Where();
+
+            return null;
+        }
     }
 }

@@ -1,24 +1,34 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using GRMModels;
 using GRMServices;
+using GRMServices.Interfaces;
 using GRMTestsCommon;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace GRMUnitTests
 {
     [TestClass]
     public class ContractsProviderShould : BaseTests
     {
+        private Mock<IFileService> _fileServer;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            _fileServer = new Mock<IFileService>();
+        }
+
         [TestMethod]
         public void LoadMusicContracts()
         {
-            var filePath = Path.Combine(DataFilesFolder, MusicContractsFile);
+            var provider = new ContractsProvider(_fileServer.Object);
+            _fileServer.Setup(x => x.GetFileDataRows(It.IsAny<string>())).Returns(SplitData(Constants.MusicContractsFileMock));
 
-            var service = new FileService();
-            var provider = new ContractsProvider(service);
-            var contracts = provider.LoadMusicContracts(filePath);
+            var contracts = provider.LoadMusicContracts(string.Empty);
 
             Assert.AreEqual(7, contracts.Count);
 
@@ -45,11 +55,10 @@ namespace GRMUnitTests
         [TestMethod]
         public void LoadDistributionPartnerContracts()
         {
-            var filePath = Path.Combine(DataFilesFolder, DistributionContractsFile);
+            var provider = new ContractsProvider(_fileServer.Object);
+            _fileServer.Setup(x => x.GetFileDataRows(It.IsAny<string>())).Returns(SplitData(Constants.DistributionContractsFileMock));
 
-            var service = new FileService();
-            var provider = new ContractsProvider(service);
-            var contracts = provider.LoadDistributionPartnerContracts(filePath);
+            var contracts = provider.LoadDistributionPartnerContracts(String.Empty);
 
             Assert.AreEqual(2, contracts.Count);
 
@@ -58,6 +67,17 @@ namespace GRMUnitTests
             Assert.AreEqual("YouTube", contracts[1].Partner.Name);
             Assert.AreEqual(DistributionType.Streaming, contracts[1].Partner.Type);
         }
+
+        [TestMethod]
+        public void ReturnValueFromQuery()
+        {
+        }
+
+        private List<string> SplitData(string data)
+        {
+            var items = data.Split(new[]{Environment.NewLine}, StringSplitOptions.None);
+            return items.ToList();
+;        }
     }
 
 }
