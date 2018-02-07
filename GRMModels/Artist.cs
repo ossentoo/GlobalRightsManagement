@@ -5,14 +5,19 @@ namespace GRMModels
 {
     public class Artist
     {
+        public Artist()
+        {
+            Assets = new List<Asset>();
+        }
+
         public string Name { get; set; }
-        public IEnumerable<Asset> Assets { get; set; }
+        public List<Asset> Assets { get; set; }
     }
 
     public class Asset
     {
         public string Name { get; set; }
-        public DistributionType Type { get; set; }
+        public List<DistributionType> DistributionTypes { get; set; }
         public DateTime DistributionStart { get; set; }
         public DateTime DistributionEnd { get; set; }
     }
@@ -26,8 +31,8 @@ namespace GRMModels
 
     public enum DistributionType
     {
-        Stream,
-        Download
+        Streaming,
+        DigitalDownload
     }
 
     
