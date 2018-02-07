@@ -1,6 +1,4 @@
-﻿
-
-namespace GRMConsole
+﻿namespace GRMConsole
 {
     class Program
     {

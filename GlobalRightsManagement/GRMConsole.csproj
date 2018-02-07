@@ -48,5 +48,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GRMModels\GRMModels.csproj">
+      <Project>{56d9fdbe-fb6c-4fd9-8719-cf5c04422f64}</Project>
+      <Name>GRMModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GRMServices\GRMServices.csproj">
+      <Project>{194cd689-6375-4f0b-b27d-43305a213f63}</Project>
+      <Name>GRMServices</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
