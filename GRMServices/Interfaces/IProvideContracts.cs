@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using GRMModels;
 
-namespace GRMServices
+namespace GRMServices.Interfaces
 {
-    public interface IFileService
+    public interface IProvideContracts
     {
         List<MusicContract> LoadMusicContracts(string filePath);
         List<DistributionPartnerContract> LoadDistributionPartnerContracts(string filePath);

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{194CD689-6375-4F0B-B27D-43305A213F63}</ProjectGuid>
+    <ProjectGuid>{EFE30CF3-799C-41DE-B9ED-A0F3BEC9DFB1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GRMServices</RootNamespace>
-    <AssemblyName>GRMServices</AssemblyName>
+    <RootNamespace>GRMTestsCommon</RootNamespace>
+    <AssemblyName>GRMTestsCommon</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,17 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContractsProvider.cs" />
-    <Compile Include="FileService.cs" />
-    <Compile Include="Interfaces\IFileService.cs" />
-    <Compile Include="Interfaces\IProvideContracts.cs" />
+    <Compile Include="BaseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GRMModels\GRMModels.csproj">
-      <Project>{56d9fdbe-fb6c-4fd9-8719-cf5c04422f64}</Project>
-      <Name>GRMModels</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

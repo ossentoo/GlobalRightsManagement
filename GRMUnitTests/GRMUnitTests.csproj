@@ -48,7 +48,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="ContractsProviderShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +62,10 @@
     <ProjectReference Include="..\GRMServices\GRMServices.csproj">
       <Project>{194cd689-6375-4f0b-b27d-43305a213f63}</Project>
       <Name>GRMServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GRMTestsCommon\GRMTestsCommon.csproj">
+      <Project>{efe30cf3-799c-41de-b9ed-a0f3bec9dfb1}</Project>
+      <Name>GRMTestsCommon</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
