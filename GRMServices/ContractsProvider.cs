@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using GRMModels;
 using GRMServices.Interfaces;
@@ -21,6 +22,8 @@ namespace GRMServices
 
         private const int DistribColumns_Partner = 0;
         private const int DistribColumns_Usage = 1;
+
+        private const string TitleRow = "Artist|Title|Usage|StartDate|EndDate";
         // ReSharper restore InconsistentNaming
 
         public ContractsProvider(IFileService fileService)
@@ -121,13 +124,35 @@ namespace GRMServices
             return results;
         }
 
-        public List<string> QueryArtistAssetsToDistribute(string query)
+        /// <summary>
+        /// Query and return data as a list of strings.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public string QueryArtistAssetsToDistribute(string query)
         {
-
             var querySplit = query.Split(new []{' '}, 2, StringSplitOptions.RemoveEmptyEntries);
-            // _musicContracts.Where();
 
-            return null;
+            var distributionPartner = querySplit[0];
+            var distributionStart = querySplit[1].ReplaceTextInDate();
+
+            DateTime.TryParse(distributionStart, out DateTime startDate);
+
+            var contracts = _musicContracts.Where(z => z.Artist.Name == distributionPartner)
+                .SelectMany(x => x.Artist.Assets)
+                .Where(z => z.DistributionStart <= startDate)
+                .Select(a => new
+                {
+                    Artist = a.Name,
+                    Usage = a.DistributionTypes.First(),
+                    StartDate = a.DistributionStart,
+                    EndDate = a.DistributionEnd,
+                });
+
+
+            var joined = string.Join("|", contracts);
+            var results = TitleRow + joined;
+            return results;
         }
     }
 }

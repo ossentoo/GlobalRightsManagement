@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using GRMModels;
 using GRMServices;
@@ -69,8 +68,28 @@ namespace GRMUnitTests
         }
 
         [TestMethod]
-        public void ReturnValueFromQuery()
+        public void ReturnValueFromQueryForITunes()
         {
+            var provider = new ContractsProvider(_fileServer.Object);
+
+            _fileServer.Setup(x => x.GetFileDataRows(It.IsAny<string>()))
+                .Returns(SplitData(Constants.DistributionContractsFileMock));
+
+            provider.LoadDistributionPartnerContracts(String.Empty);
+
+            _fileServer.Setup(x => x.GetFileDataRows(It.IsAny<string>()))
+                .Returns(SplitData(Constants.MusicContractsFileMock));
+            provider.LoadMusicContracts(String.Empty);
+
+            var data = provider.QueryArtistAssetsToDistribute("ITunes 1st March 2012");
+
+            Assert.AreEqual(5, data);
+            Assert.AreEqual("Artist|Title|Usage|StartDate|EndDate", data[0]);
+            Assert.AreEqual("Monkey Claw|Black Mountain|digital download|1st Feb 2012|", data[0]);
+            Assert.AreEqual("Monkey Claw|Motor Mouth|digital download|1st Mar 2011|", data[0]);
+            Assert.AreEqual("Tinie Tempah|Frisky (Live from SoHo)|digital download|1st Feb 2012|", data[0]);
+            Assert.AreEqual("Tinie Tempah|Miami 2 Ibiza|digital download|1st Feb 2012|", data[0]);
+
         }
 
         private List<string> SplitData(string data)
