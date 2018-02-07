@@ -16,6 +16,7 @@ namespace GRMServices
         private const int MusicColumns_DistributionType = 2;
         private const int MusicColumns_DistributionStart = 3;
         private const int MusicColumns_DistributionEnd = 4;
+
         private const int DistribColumns_Partner = 0;
         private const int DistribColumns_Usage = 1;
         // ReSharper restore InconsistentNaming
@@ -25,7 +26,6 @@ namespace GRMServices
             var fileInfo = new FileInfo(filePath);
             var rowsToProcess = GetFileContentRows(fileInfo);
             var results = new List<MusicContract>();
-            var culture = CultureInfo.InvariantCulture;
 
             foreach (var row in rowsToProcess)
             {

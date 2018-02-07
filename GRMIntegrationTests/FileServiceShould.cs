@@ -28,18 +28,21 @@ namespace GRMIntegrationTests
 
             Assert.AreEqual("Monkey Claw", contracts[5].Artist.Name);
 
-            var artistAsset = contracts[5].Artist.Assets[0];
+            var artistAsset = contracts[5].Artist.Assets.First(x=>x.Name == "Motor Mouth");
             Assert.AreEqual("Motor Mouth", artistAsset.Name);
             Assert.AreEqual(2, artistAsset.DistributionTypes.Count);
             Assert.AreEqual(DistributionType.DigitalDownload, artistAsset.DistributionTypes.First());
             Assert.AreEqual(new DateTime(2011, 3, 1), artistAsset.DistributionStart);
 
-            artistAsset = contracts[6].Artist.Assets[0];
+            artistAsset = contracts[6].Artist.Assets.First(x => x.Name == "Christmas Special");
             Assert.AreEqual("Christmas Special", artistAsset.Name);
             Assert.AreEqual(1, artistAsset.DistributionTypes.Count);
             Assert.AreEqual(DistributionType.Streaming, artistAsset.DistributionTypes.First());
             Assert.AreEqual(new DateTime(2012, 12, 25), artistAsset.DistributionStart);
             Assert.AreEqual(new DateTime(2012, 12, 31), artistAsset.DistributionEnd);
+
+            Assert.AreEqual(3, contracts[0].Artist.Assets.Count);
+            Assert.AreEqual(4, contracts[3].Artist.Assets.Count);
 
         }
 

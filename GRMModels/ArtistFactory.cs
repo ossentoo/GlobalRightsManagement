@@ -5,10 +5,10 @@ namespace GRMModels
 {
     public static class ArtistFactory
     {
-        private static IEnumerable<Artist> Artists;
+        private static List<Artist> Artists;
         static ArtistFactory()
         {
-            Artists = Enumerable.Empty<Artist>();
+            Artists = new List<Artist>();
         }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace GRMModels
             if (artist==null)
             {
                 artist = new Artist{Name = artistName};
-                Artists = Artists.Concat(new []{new Artist() });
+                Artists.Add(artist);
             }
             return artist;
         }

@@ -8,8 +8,10 @@ namespace GRMModels
         public Artist()
         {
             Assets = new List<Asset>();
+            Id = Guid.NewGuid();
         }
 
+        public Guid Id { get; }
         public string Name { get; set; }
         public List<Asset> Assets { get; set; }
     }
