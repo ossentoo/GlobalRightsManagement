@@ -67,19 +67,20 @@ namespace GRMUnitTests
             Assert.AreEqual(DistributionType.Streaming, contracts[1].Partner.Type);
         }
 
+
         [TestMethod]
         public void ReturnValueFromQueryForITunes()
         {
-            var provider = new ContractsProvider(_fileServer.Object);
+            var partnerPath = "Partner";
+            var musicPath = "Music";
 
-            _fileServer.Setup(x => x.GetFileDataRows(It.IsAny<string>()))
+            _fileServer.Setup(x => x.GetFileDataRows(It.Is<string>(y => y.Equals(partnerPath))))
                 .Returns(SplitData(Constants.DistributionContractsFileMock));
 
-            provider.LoadDistributionPartnerContracts(String.Empty);
-
-            _fileServer.Setup(x => x.GetFileDataRows(It.IsAny<string>()))
+            _fileServer.Setup(x => x.GetFileDataRows(It.Is<string>(y => y.Equals(musicPath))))
                 .Returns(SplitData(Constants.MusicContractsFileMock));
-            provider.LoadMusicContracts(String.Empty);
+
+            var provider = new ContractsProvider(_fileServer.Object, musicPath, partnerPath);
 
             var data = provider.QueryArtistAssetsToDistribute("ITunes 1st March 2012");
 

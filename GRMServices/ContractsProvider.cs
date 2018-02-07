@@ -11,7 +11,7 @@ namespace GRMServices
     {
         private readonly IFileService _fileService;
         private readonly List<MusicContract> _musicContracts;
-        private List<DistributionContract> _distributionContracts;
+        private readonly List<DistributionContract> _distributionContracts;
 
         // ReSharper disable InconsistentNaming
         private const int MusicColumns_Artist = 0;
@@ -30,6 +30,32 @@ namespace GRMServices
         {
             _fileService = fileService;
             _musicContracts = new List<MusicContract>();
+        }
+
+        public ContractsProvider(IFileService fileService, string musicFilePath, string distributionFilePath)
+        {
+            if(string.IsNullOrEmpty(musicFilePath) || string.IsNullOrEmpty(distributionFilePath))
+                throw new ArgumentNullException("Invalid file path arguments");
+
+            _fileService = fileService;
+            _musicContracts = new List<MusicContract>();
+            _distributionContracts = new List<DistributionContract>();
+
+            _musicContracts = LoadMusicContracts(musicFilePath);
+            _distributionContracts = LoadDistributionPartnerContracts(distributionFilePath);
+
+            CreateRelationships();
+        }
+
+        private void CreateRelationships()
+        {
+            foreach (var contract in _distributionContracts)
+            {
+                contract.Assets = from a in _musicContracts.SelectMany(x => x.Artist.Assets)
+                    from b in a.DistributionTypes
+                    where b == contract.Partner.Type
+                    select a;
+            }
         }
 
         public List<MusicContract> LoadMusicContracts(string filePath)
@@ -70,7 +96,6 @@ namespace GRMServices
                     Artist = artist
                 };
 
-
                 _musicContracts.Add(contract);
             }
 
@@ -81,7 +106,6 @@ namespace GRMServices
         public List<DistributionContract> LoadDistributionPartnerContracts(string filePath)
         {
             var rowsToProcess = _fileService.GetFileDataRows(filePath);
-            _distributionContracts = new List<DistributionContract>();
 
             foreach (var row in rowsToProcess)
             {
@@ -138,19 +162,23 @@ namespace GRMServices
 
             DateTime.TryParse(distributionStart, out DateTime startDate);
 
-            var contracts = _musicContracts.Where(z => z.Artist.Name == distributionPartner)
-                .SelectMany(x => x.Artist.Assets)
-                .Where(z => z.DistributionStart <= startDate)
-                .Select(a => new
-                {
-                    Artist = a.Name,
-                    Usage = a.DistributionTypes.First(),
-                    StartDate = a.DistributionStart,
-                    EndDate = a.DistributionEnd,
-                });
+            var requiredPartners = _distributionContracts.Where(p => p.Partner.Name == distributionPartner);
+            var partnersAssets = requiredPartners.SelectMany(a => a.Assets);
 
+            var artistAssets = _musicContracts.SelectMany(m => m.Artist.Assets);
 
-            var joined = string.Join("|", contracts);
+            var requiredFields = from a in artistAssets
+                                    from b in partnersAssets
+                                    where a.Id == b.Id && a.DistributionStart < startDate
+                                    select new
+                                    {
+                                        Artist = a.Name,
+                                        Usage = a.DistributionTypes.First(),
+                                        StartDate = a.DistributionStart,
+                                        EndDate = a.DistributionEnd,
+                                    };
+
+            var joined = string.Join("|", requiredFields);
             var results = TitleRow + joined;
             return results;
         }

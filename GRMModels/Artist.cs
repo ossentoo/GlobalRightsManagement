@@ -18,6 +18,11 @@ namespace GRMModels
 
     public class Asset
     {
+        public Asset()
+        {
+            Id = Guid.NewGuid();
+        }
+        public Guid Id { get; }
         public string Name { get; set; }
         public List<DistributionType> DistributionTypes { get; set; }
         public DateTime DistributionStart { get; set; }
