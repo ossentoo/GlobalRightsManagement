@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Linq;
+using System.Net.Sockets;
+using System.Text;
 using GRMModels;
 using GRMServices.Interfaces;
+using Humanizer;
 
 namespace GRMServices
 {
@@ -30,16 +33,14 @@ namespace GRMServices
         {
             _fileService = fileService;
             _musicContracts = new List<MusicContract>();
+            _distributionContracts = new List<DistributionContract>();
         }
 
         public ContractsProvider(IFileService fileService, string musicFilePath, string distributionFilePath)
+            :this(fileService)
         {
             if(string.IsNullOrEmpty(musicFilePath) || string.IsNullOrEmpty(distributionFilePath))
                 throw new ArgumentNullException("Invalid file path arguments");
-
-            _fileService = fileService;
-            _musicContracts = new List<MusicContract>();
-            _distributionContracts = new List<DistributionContract>();
 
             _musicContracts = LoadMusicContracts(musicFilePath);
             _distributionContracts = LoadDistributionPartnerContracts(distributionFilePath);
@@ -165,25 +166,50 @@ namespace GRMServices
             DateTime.TryParse(distributionStart, out DateTime startDate);
 
             var requiredPartners = _distributionContracts.Where(p => p.Partner.Name == distributionPartner);
-            var partnersAssets = requiredPartners.SelectMany(a => a.Assets).Distinct();
+            var partnersAssets = requiredPartners.SelectMany(a =>
+                {
+                    var o = new { a, a.Assets, a.Partner.Type};
+                    return new[] {o};
+                }).Distinct();
 
-            var requiredFields = (from a in _musicContracts.Select(m => m.Artist)
-                                 from b in a.Assets
-                                 from c in partnersAssets
-                                 where b.Id == c.Id && b.DistributionStart < startDate
-                                    orderby a.Name, b.Name 
-                                    select new
+            var requiredAssets = (from a in _musicContracts.Select(m => m.Artist)
+                                from b in a.Assets
+                                from c in partnersAssets
+                                where c.Assets.Contains(b) && b.DistributionStart < startDate
+                                  select new {a, b, c}).Distinct();
+
+            var requiredFields = from x in requiredAssets
+                                    orderby x.a.Name, x.b.Name 
+                                    select new FileDataRow
                                     {
-                                        Artist = a.Name,
-                                        Title = b.Name,
-                                        Usage = b.DistributionTypes.First(),
-                                        StartDate = b.DistributionStart,
-                                        EndDate = b.DistributionEnd,
-                                    }).Distinct();
+                                        Artist = x.a.Name,
+                                        Title = x.b.Name,
+                                        Usage = x.b.DistributionTypes.First(y=>y==x.c.Type).ToDescription(),
+                                        StartDate = x.b.DistributionStart.ToOrdinalDate(),
+                                        EndDate = x.b.DistributionEnd?.ToOrdinalDate()
+                                    };
 
-            var joined = string.Join("|", requiredFields);
-            var results = TitleRow + joined;
-            return results;
+            var fileText = CreateFileText(requiredFields);
+            return fileText;
+        }
+
+        private string CreateFileText(IEnumerable<FileDataRow> dataRows)
+        {
+            var builder = new StringBuilder();
+
+            builder.Append($"{TitleRow}{Environment.NewLine}");
+
+            foreach (var row in dataRows)
+            {
+                builder.Append($"{row.Artist}|{row.Title}|{row.Usage}|" +
+                               $"{row.StartDate}|{row.EndDate}" +
+                               $"{Environment.NewLine}");
+            }
+
+            var fileText = builder.ToString();
+
+            // remove the last newline character from the string
+            return fileText.Substring(0, fileText.Length - 2);
         }
     }
 }

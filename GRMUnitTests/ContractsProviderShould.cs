@@ -69,7 +69,7 @@ namespace GRMUnitTests
 
 
         [TestMethod]
-        public void ReturnValueFromQueryForITunes()
+        public void ReturnValueFromQueryForITunes1March2012()
         {
             var partnerPath = "Partner";
             var musicPath = "Music";
@@ -84,13 +84,65 @@ namespace GRMUnitTests
 
             var data = provider.QueryArtistAssetsToDistribute("ITunes 1st March 2012");
 
-            Assert.AreEqual(5, data);
-            Assert.AreEqual("Artist|Title|Usage|StartDate|EndDate", data[0]);
-            Assert.AreEqual("Monkey Claw|Black Mountain|digital download|1st Feb 2012|", data[0]);
-            Assert.AreEqual("Monkey Claw|Motor Mouth|digital download|1st Mar 2011|", data[0]);
-            Assert.AreEqual("Tinie Tempah|Frisky (Live from SoHo)|digital download|1st Feb 2012|", data[0]);
-            Assert.AreEqual("Tinie Tempah|Miami 2 Ibiza|digital download|1st Feb 2012|", data[0]);
+            var result = data.Split(new[]{Environment.NewLine}, StringSplitOptions.None);
 
+            Assert.AreEqual(5, result.Length);
+            Assert.AreEqual("Artist|Title|Usage|StartDate|EndDate", result[0]);
+            Assert.AreEqual("Monkey Claw|Black Mountain|digital download|1st Feb 2012|", result[1]);
+            Assert.AreEqual("Monkey Claw|Motor Mouth|digital download|1st Mar 2011|", result[2]);
+            Assert.AreEqual("Tinie Tempah|Frisky(Live from SoHo)|digital download|1st Feb 2012|", result[3]);
+            Assert.AreEqual("Tinie Tempah|Miami 2 Ibiza|digital download|1st Feb 2012|", result[4]);
+
+        }
+
+        [TestMethod]
+        public void ReturnValueFromQueryForYoutube1April2012()
+        {
+            var partnerPath = "Partner";
+            var musicPath = "Music";
+
+            _fileServer.Setup(x => x.GetFileDataRows(It.Is<string>(y => y.Equals(partnerPath))))
+                .Returns(SplitData(Constants.DistributionContractsFileMock));
+
+            _fileServer.Setup(x => x.GetFileDataRows(It.Is<string>(y => y.Equals(musicPath))))
+                .Returns(SplitData(Constants.MusicContractsFileMock));
+
+            var provider = new ContractsProvider(_fileServer.Object, musicPath, partnerPath);
+
+            var data = provider.QueryArtistAssetsToDistribute("YouTube 1st April 2012");
+
+            var result = data.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+
+            Assert.AreEqual(3, result.Length);
+            Assert.AreEqual("Artist|Title|Usage|StartDate|EndDate", result[0]);
+            Assert.AreEqual("Monkey Claw|Motor Mouth|streaming|1st Mar 2011|", result[1]);
+            Assert.AreEqual("Tinie Tempah|Frisky(Live from SoHo)|streaming|1st Feb 2012|", result[2]);
+        }
+
+        [TestMethod]
+        public void ReturnValueFromQueryForYoutube27Dec2012()
+        {
+            var partnerPath = "Partner";
+            var musicPath = "Music";
+
+            _fileServer.Setup(x => x.GetFileDataRows(It.Is<string>(y => y.Equals(partnerPath))))
+                .Returns(SplitData(Constants.DistributionContractsFileMock));
+
+            _fileServer.Setup(x => x.GetFileDataRows(It.Is<string>(y => y.Equals(musicPath))))
+                .Returns(SplitData(Constants.MusicContractsFileMock));
+
+            var provider = new ContractsProvider(_fileServer.Object, musicPath, partnerPath);
+
+            var data = provider.QueryArtistAssetsToDistribute("YouTube 27th Dec 2012");
+
+            var result = data.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+
+            Assert.AreEqual(5, result.Length);
+            Assert.AreEqual("Artist|Title|Usage|StartDate|EndDate", result[0]);
+            Assert.AreEqual("Monkey Claw|Christmas Special|streaming|25th Dec 2012|31st Dec 2012", result[1]);
+            Assert.AreEqual("Monkey Claw|Iron Horse|streaming|1st Jun 2012|", result[2]);
+            Assert.AreEqual("Monkey Claw|Motor Mouth|streaming|1st Mar 2011|", result[3]);
+            Assert.AreEqual("Tinie Tempah|Frisky(Live from SoHo)|streaming|1st Feb 2012|", result[4]);
         }
 
         private List<string> SplitData(string data)

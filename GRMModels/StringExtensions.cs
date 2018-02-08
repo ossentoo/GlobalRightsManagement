@@ -1,4 +1,8 @@
-﻿namespace GRMModels
+﻿using System;
+using System.Reflection;
+using Humanizer;
+
+namespace GRMModels
 {
     public static class StringExtensions
     {
@@ -13,5 +17,34 @@
 
             return date;
         }
+
+        public static string ToDescription(this DistributionType en)
+        {
+
+            var type = en.GetType();
+
+            var memInfo = type.GetMember(en.ToString());
+
+            if (memInfo.Length > 0)
+            {
+                var attrs = memInfo[0].GetCustomAttributes(typeof(Description), false);
+
+                if (attrs.Length > 0)
+                    return ((Description)attrs[0]).Text;
+
+            }
+
+            return en.ToString();
+
+        }
+
+
+        public static string ToOrdinalDate(this DateTime date)
+        {
+            var day = date.Day.Ordinalize();
+
+            return $"{day} {date:MMM yyyy}";
+        }
+
     }
 }

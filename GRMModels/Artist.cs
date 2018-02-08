@@ -26,7 +26,7 @@ namespace GRMModels
         public string Name { get; set; }
         public List<DistributionType> DistributionTypes { get; set; }
         public DateTime DistributionStart { get; set; }
-        public DateTime DistributionEnd { get; set; }
+        public DateTime? DistributionEnd { get; set; }
     }
 
 
@@ -36,9 +36,23 @@ namespace GRMModels
         public DistributionType Type { get; set; }
     }
 
+    public class Description : Attribute
+    {
+        public string Text;
+
+        public Description(string text)
+        {
+
+            Text = text;
+
+        }
+
+    }
     public enum DistributionType
     {
+        [GRMModels.Description("streaming")]
         Streaming,
+        [GRMModels.Description("digital download")]
         DigitalDownload
     }
 
