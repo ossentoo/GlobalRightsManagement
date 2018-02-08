@@ -1,7 +1,7 @@
 ﻿
 namespace GRMTestsCommon
 {
-    public abstract class BaseTests
+    public abstract class BaseClass
     {
         public const string DataFilesFolder = @"Resources\";
         public const string DistributionContractsFile = "DistributionPartnerContracts.txt";

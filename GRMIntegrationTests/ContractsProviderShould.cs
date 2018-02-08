@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace GRMIntegrationTests
 {
     [TestClass]
-    public class ContractsProviderShould : BaseTests
+    public class ContractsProviderShould : BaseClass
     {
         [TestMethod]
         public void LoadMusicContracts()

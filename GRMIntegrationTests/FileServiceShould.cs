@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace GRMIntegrationTests
 {
     [TestClass]
-    public class FileServiceShould : BaseTests
+    public class FileServiceShould : BaseClass
     {
         [TestMethod]
         public void LoadMusicContracts()

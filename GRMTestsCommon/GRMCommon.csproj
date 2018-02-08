@@ -7,8 +7,8 @@
     <ProjectGuid>{EFE30CF3-799C-41DE-B9ED-A0F3BEC9DFB1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GRMTestsCommon</RootNamespace>
-    <AssemblyName>GRMTestsCommon</AssemblyName>
+    <RootNamespace>GRMCommon</RootNamespace>
+    <AssemblyName>GRMCommon</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseTests.cs" />
+    <Compile Include="BaseClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -11,7 +11,7 @@ using Moq;
 namespace GRMUnitTests
 {
     [TestClass]
-    public class ContractsProviderShould : BaseTests
+    public class ContractsProviderShould : BaseClass
     {
         private Mock<IFileService> _fileServer;
 
