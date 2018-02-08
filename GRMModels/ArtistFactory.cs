@@ -5,7 +5,7 @@ namespace GRMModels
 {
     public static class ArtistFactory
     {
-        private static List<Artist> Artists;
+        private static readonly List<Artist> Artists;
         static ArtistFactory()
         {
             Artists = new List<Artist>();
@@ -27,6 +27,11 @@ namespace GRMModels
                 Artists.Add(artist);
             }
             return artist;
+        }
+
+        public static void Clear()
+        {
+            Artists.Clear();
         }
     }
 }

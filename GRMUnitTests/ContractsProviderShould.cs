@@ -74,6 +74,7 @@ namespace GRMUnitTests
             var partnerPath = "Partner";
             var musicPath = "Music";
 
+            _fileServer.ResetCalls();
             _fileServer.Setup(x => x.GetFileDataRows(It.Is<string>(y => y.Equals(partnerPath))))
                 .Returns(SplitData(Constants.DistributionContractsFileMock));
 
@@ -101,6 +102,7 @@ namespace GRMUnitTests
             var partnerPath = "Partner";
             var musicPath = "Music";
 
+            _fileServer.ResetCalls();
             _fileServer.Setup(x => x.GetFileDataRows(It.Is<string>(y => y.Equals(partnerPath))))
                 .Returns(SplitData(Constants.DistributionContractsFileMock));
 
@@ -124,7 +126,7 @@ namespace GRMUnitTests
         {
             var partnerPath = "Partner";
             var musicPath = "Music";
-
+            _fileServer.ResetCalls();
             _fileServer.Setup(x => x.GetFileDataRows(It.Is<string>(y => y.Equals(partnerPath))))
                 .Returns(SplitData(Constants.DistributionContractsFileMock));
 
@@ -143,6 +145,7 @@ namespace GRMUnitTests
             Assert.AreEqual("Monkey Claw|Iron Horse|streaming|1st Jun 2012|", result[2]);
             Assert.AreEqual("Monkey Claw|Motor Mouth|streaming|1st Mar 2011|", result[3]);
             Assert.AreEqual("Tinie Tempah|Frisky(Live from SoHo)|streaming|1st Feb 2012|", result[4]);
+
         }
 
         private List<string> SplitData(string data)

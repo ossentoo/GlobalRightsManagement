@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.Linq;
-using System.Net.Sockets;
 using System.Text;
 using GRMModels;
 using GRMServices.Interfaces;
-using Humanizer;
 
 namespace GRMServices
 {
@@ -34,6 +31,7 @@ namespace GRMServices
             _fileService = fileService;
             _musicContracts = new List<MusicContract>();
             _distributionContracts = new List<DistributionContract>();
+            ArtistFactory.Clear();
         }
 
         public ContractsProvider(IFileService fileService, string musicFilePath, string distributionFilePath)
