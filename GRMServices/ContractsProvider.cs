@@ -51,10 +51,12 @@ namespace GRMServices
         {
             foreach (var contract in _distributionContracts)
             {
-                contract.Assets = from a in _musicContracts.SelectMany(x => x.Artist.Assets)
-                    from b in a.DistributionTypes
-                    where b == contract.Partner.Type
-                    select a;
+                var assets = _musicContracts.SelectMany(x => x.Artist.Assets).Distinct();
+
+                contract.Assets = from a in assets
+                                    from b in a.DistributionTypes
+                                    where b == contract.Partner.Type
+                                    select a;
             }
         }
 
@@ -163,20 +165,21 @@ namespace GRMServices
             DateTime.TryParse(distributionStart, out DateTime startDate);
 
             var requiredPartners = _distributionContracts.Where(p => p.Partner.Name == distributionPartner);
-            var partnersAssets = requiredPartners.SelectMany(a => a.Assets);
+            var partnersAssets = requiredPartners.SelectMany(a => a.Assets).Distinct();
 
-            var artistAssets = _musicContracts.SelectMany(m => m.Artist.Assets);
-
-            var requiredFields = from a in artistAssets
-                                    from b in partnersAssets
-                                    where a.Id == b.Id && a.DistributionStart < startDate
+            var requiredFields = (from a in _musicContracts.Select(m => m.Artist)
+                                 from b in a.Assets
+                                 from c in partnersAssets
+                                 where b.Id == c.Id && b.DistributionStart < startDate
+                                    orderby a.Name, b.Name 
                                     select new
                                     {
                                         Artist = a.Name,
-                                        Usage = a.DistributionTypes.First(),
-                                        StartDate = a.DistributionStart,
-                                        EndDate = a.DistributionEnd,
-                                    };
+                                        Title = b.Name,
+                                        Usage = b.DistributionTypes.First(),
+                                        StartDate = b.DistributionStart,
+                                        EndDate = b.DistributionEnd,
+                                    }).Distinct();
 
             var joined = string.Join("|", requiredFields);
             var results = TitleRow + joined;
